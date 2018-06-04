@@ -1,0 +1,522 @@
+﻿@using PurpleBricksWeb.Models
+@model SaleBoradModel
+@{
+    ViewBag.Title = "Sale Board";
+}
+
+<div id="s_search_container">
+    <div class="col-md-12">
+        <h1 class="s_title">Sale Board Search</h1>
+    </div>
+    <div id="dvError"></div>
+    <div class="row">
+        <form class="form-horizontal" id="form_container">
+            <fieldset>
+                <div id="address_finder_fields">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">Property Address</label>
+                        <div class="col-xs-10 inputGroupContainer">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                                <input id="propertyAddress" name="propertyAddressSearch" placeholder="To find your property address, start typing here" class="form-control" required value="" type="text">
+                                @Html.HiddenFor(model => model.PropertyAddress.VerifiedAddress, new { id = "verifiedAddress", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-10 inputGroupContainer pull-right">
+                            <button type="button" class="input-group btn btn-default manual_address">or enter your address manually</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="manual_address_feilds">
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label">Street Address</label>
+                        <div class="col-xs-8 inputGroupContainer">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                                @Html.TextBoxFor(model => model.PropertyAddress.StreetAddress, new { id = "streetAddress", placeholder = "Street Address", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label">Suburb</label>
+                        <div class="col-xs-8 inputGroupContainer">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                                @Html.TextBoxFor(model => model.PropertyAddress.Suburb, new { id = "suburb", placeholder = "Suburb", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label">State</label>
+                        <div class="col-xs-8 inputGroupContainer">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                                @Html.DropDownListFor(model => model.PropertyAddress.State, new SelectList(SaleBoradModel.States, "Value", "Text", Model.PropertyAddress != null ? Model.PropertyAddress.State : null), "--Select--", new { @class = "form-control", @id = "state" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label">Postcode</label>
+                        <div class="col-xs-8 inputGroupContainer">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                                @Html.TextBoxFor(model => model.PropertyAddress.Postcode, new { id = "postcode", placeholder = "Postcode", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-10 inputGroupContainer pull-right">
+                            <button type="button" class="input-group btn btn-default address_finder">or use the address finder</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 control-label">Borad Size</label>
+                    <div class="col-xs-2 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
+                            @Html.DropDownListFor(model => model.BoardSize, new SelectList(SaleBoradModel.BordSizes, "Value", "Text"), new { @class = "form-control", @id = "boardSize" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-4 control-label">Date From</label>
+                    <div class="col-xs-8 inputGroupContainer">
+                        <div class="input-group input-append date">
+                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                            @Html.TextBoxFor(model => model.DateFrom, new { id = "fromDate", placeholder = "Date From", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-4 control-label">Date To</label>
+                    <div class="col-xs-8 inputGroupContainer">
+                        <div class="input-group input-append date">
+                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                            @Html.TextBoxFor(model => model.DateTo, new { id = "toDate", placeholder = "Date To", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 control-label">Title</label>
+                    <div class="col-xs-2 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            @Html.DropDownListFor(model => model.Customer.Title, new SelectList(SaleBoradModel.Titles, "Value", "Text"), "--Select--", new { @class = "form-control", @id = "personTitle" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-4 control-label">First Name</label>
+                    <div class="col-xs-8 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            @Html.TextBoxFor(model => model.Customer.FirstName, new { id = "firstName", placeholder = "First Name", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-4 control-label">Last Name</label>
+                    <div class="col-xs-8 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            @Html.TextBoxFor(model => model.Customer.LastName, new { id = "lastName", placeholder = "Last Name", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-4 control-label">Email</label>
+                    <div class="col-xs-8 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                            @Html.TextBoxFor(model => model.Customer.Email, new { id = "email", placeholder = "Email", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-4 control-label">Phone Number</label>
+                    <div class="col-xs-8 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                            @Html.TextBoxFor(model => model.Customer.PhoneNumber, new { id = "phoneNumber", placeholder = "Phone Number", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="inputGroupContainer text-center">
+                    <button type="button" id="btnPriceCheck" class="well-sm btn btn-purple">
+                        Price Check
+                    </button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div id="s_result_container">
+    <table class="table border-purple table-quote">
+        <thead>
+            <tr>
+                <th colspan="4" class="text-center purple-row">Quotation</th>
+            </tr>
+            <tr>
+                <th colspan="2">
+                    <label class="col-xs-12" id="fullName">Mr. Tharaka Wanigasekera</label>
+                    <label class="col-xs-12" id="streetAddress">2 Gillies street</label>
+                    <label class="col-xs-12" id="addressPart2">Essendon North VIC 3041</label>
+                </th>
+                <th colspan="2" class="verticle-top">
+                    <div class="pull-right">
+                        <label>Quote Date:</label>
+                        <label id="orderDate">12/06/2018</label>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th scope="col">Description</th>
+                <th scope="col" class="text-center">Daily Rate</th>
+                <th scope="col" class="text-center">No. of Days</th>
+                <th scope="col"><span class="pull-right">Amount</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="glyphicon glyphicon-file">&nbsp;</span><span id="orderDesc">Samll Board</span></td>
+                <td class="text-center"><span id="orderDailyRate">$50</span></td>
+                <td class="text-center"><span id="orderDays">5</span></td>
+                <td class="text-right">$<span id="orderAmount">250</span></td>
+            </tr>
+            <tr>
+                <td colspan="3">Discount <span id="orderDiscountRate">0</span>%</td>
+                <td class="text-right"><span id="orderDiscount">0</span></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">Total</td>
+                <td class="text-right">$<span id="orderTotal">250</span>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-center">
+                    <button type="button" id="btnOrder" class="well-sm btn  btn-purple">
+                        Place Your Order
+                    </button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdbA2r6IvCbSRj9nXyefYRnlUyJRq3Mwo&libraries=places&callback=initAutocomplete"
+        async defer></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".manual_address").on('click', function (evt) {
+            evt.preventDefault();
+            $("#manual_address_feilds").show();
+            $("#address_finder_fields").hide();
+            resetAddressFields();
+        });
+
+        $(".address_finder").on('click', function (evt) {
+            evt.preventDefault();
+            $("#manual_address_feilds").hide();
+            $("#address_finder_fields").show();
+            resetAddressFields();
+        });
+
+        $('#fromDate').datepicker({
+            dateFormat: 'dd/mm/yy'
+        });
+
+        $('#toDate').datepicker({
+            dateFormat: 'dd/mm/yy'
+        });
+
+        $("#btnPriceCheck").on('click', function (evt) {
+            evt.preventDefault();
+            if (!isValidForm())
+                return;
+
+            $("#dvError").css("display", "none");
+            var data = $('#form_container').serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CheckPrice")",
+                data: data,
+                beforeSend: function () {
+                    ShowLoader("checking prices..");
+                },  
+                success: function (result, status, xhr) {
+                    HideLoader();
+                    var fullName = result.Customer.Title + " " + result.Customer.FirstName + " " + result.Customer.LastName;
+                    var streetAddress = result.PropertyAddress.StreetAddress;
+                    var addressPart2 = result.PropertyAddress.Suburb + " " + result.PropertyAddress.State + " " + result.PropertyAddress.Postcode;
+                    var quoteDate = moment(new Date()).format("DD/MM/YYYY");
+                    var orderDesc = (result.BoardSize == 1 ? "Board Size: Small" : "Board Size: Large") +
+                        " ( From: " + moment(result.DateFrom).format("DD/MM/YYYY") + " - To: " + moment(result.DateTo).format("DD/MM/YYYY") + ")";
+                    var amount = result.DailyRate * result.NumberOfDays;
+                    if (amount == 0) {
+                        $("#dvError")[0].innerHTML = "<ul><li>Sorry our service is not available to the property area.</li><ul>";
+                        $("#dvError").css("display", "block");
+                        $("#s_result_container").css("display", "none");
+                    }
+                    else {
+                        $("#s_result_container").css("display", "block");
+                        $("#fullName").text(fullName);
+                        $("#streetAddress").text(streetAddress);
+                        $("#addressPart2").text(addressPart2);
+                        $("#orderDate").text(quoteDate);
+                        $("#orderDesc").text(orderDesc);
+                        $("#orderDailyRate").text(result.DailyRate);
+                        $("#orderDays").text(result.NumberOfDays);
+                        $("#orderAmount").text(amount);
+                        if (result.Discount > 0) {
+                            $("#trDiscount").css("display", "block");
+                            $("#orderDiscount").text("($" + result.Discount + ")");
+                            $("#orderDiscountRate").text(result.DiscountRate);
+                        }
+                        else {
+                            $("#trDiscount").css("display", "none");
+                        }
+
+                        $("#orderTotal").text(result.Amount);
+                    }
+                    $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+                },
+                error: function (xhr, status, error) {
+                    $("#dvError")[0].innerHTML = "Oops something went wrong.";
+                }
+            });
+
+        });
+
+    });
+
+    function isValidForm() {
+
+        clearMessages();
+        var errorMessage = "<ul>";
+        var input;
+        var inputFromDate;
+        var inputtoDate;
+
+
+        input = $.trim($("#streetAddress").val());
+        if (input == '') {
+
+            if ($("#address_finder_fields").is(":visible")) {
+                var error = "<li>Please supply a valid address</li>";
+                if (errorMessage.indexOf(error) < 0)
+                    errorMessage += error;
+                $("#propertyAddress").closest(".form-group").addClass("has-error");
+            }
+            else {
+                errorMessage += "<li>Please supply a valid street address</li>";
+                $("#streetAddress").closest(".form-group").addClass("has-error");
+            }
+        }
+
+        input = $.trim($("#suburb").val());
+        if (input == '') {
+
+            if ($("#address_finder_fields").is(":visible")) {
+                var error = "<li>Please supply a valid address</li>";
+                if (errorMessage.indexOf(error) < 0)
+                    errorMessage += error;
+                $("#propertyAddress").closest(".form-group").addClass("has-error");
+            }
+            else {
+                errorMessage += "<li>Please supply a valid suburb</li>";
+                $("#suburb").closest(".form-group").addClass("has-error");
+            }
+        }
+
+        input = $.trim($("#state").val());
+        if (input == '') {
+
+            if ($("#address_finder_fields").is(":visible")) {
+                var error = "<li>Please supply a valid address</li>";
+                if (errorMessage.indexOf(error) < 0)
+                    errorMessage += error;
+                $("#propertyAddress").closest(".form-group").addClass("has-error");
+            }
+            else {
+                errorMessage += "<li>Please supply a vallid state</li>";
+                $("#state").closest(".form-group").addClass("has-error");
+            }
+        }
+
+        input = $.trim($("#postcode").val());
+        if (input == '') {
+
+            if ($("#address_finder_fields").is(":visible")) {
+                var error = "<li>Please supply a valid address</li>";
+                if (errorMessage.indexOf(error) < 0)
+                    errorMessage += error;
+                $("#propertyAddress").closest(".form-group").addClass("has-error");
+            }
+            else {
+                errorMessage += "<li>Please supply a vallid postcode</li>";
+                $("#postcode").closest(".form-group").addClass("has-error");
+            }
+        }
+
+        input = $.trim($("#personTitle").val());
+        if (input == '') {
+            errorMessage += "<li>Please supply a title</li>";
+            $("#personTitle").closest(".form-group").addClass("has-error");
+        }
+
+        input = $.trim($("#firstName").val());
+        if (input == '') {
+            errorMessage += "<li>Please supply your first name</li>";
+            $("#firstName").closest(".form-group").addClass("has-error");
+        }
+
+        input = $.trim($("#lastName").val());
+        if (input == '') {
+            errorMessage += "<li>Please supply your last name</li>";
+            $("#lastName").closest(".form-group").addClass("has-error");
+        }
+
+        input = $.trim($("#phoneNumber").val());
+        if (input == '') {
+            errorMessage += "<li>Please supply your phone number</li>";
+            $("#phoneNumber").closest(".form-group").addClass("has-error");
+        }
+
+        input = $.trim($("#email").val());
+        if (input == '') {
+            errorMessage += "<li>Please supply your email</li>";
+            $("#email").closest(".form-group").addClass("has-error");
+        }
+        else {
+            if (!validateEmail(input)) {
+                errorMessage += "<li>Please supply a valid email</li>";
+                $("#email").closest(".form-group").addClass("has-error");
+            }
+        }
+
+        input = $.trim($("#fromDate").val());
+        var fromDate = moment(input, "DD/MM/YYYY");
+        if (input == '') {
+            errorMessage += "<li>Please supply a from date</li>";
+            $("#fromDate").closest(".form-group").addClass("has-error");
+        }
+        else {
+            if (!fromDate.isValid()) {
+                errorMessage += "<li>Please supply a valid from date</li>";
+                $("#fromDate").closest(".form-group").addClass("has-error");
+            }
+        }
+
+        input = $.trim($("#toDate").val());
+        var toDate = moment(input, "DD/MM/YYYY");
+        if (input == '') {
+            errorMessage += "<li>Please supply a to date</li>";
+            $("#toDate").closest(".form-group").addClass("has-error");
+        }
+        else {
+            if (!toDate.isValid()) {
+                errorMessage += "<li>Please supply a valid to date</li>";
+                $("#toDate").closest(".form-group").addClass("has-error");
+            }
+        }
+
+        if (fromDate.isValid() && toDate.isValid()) {
+            if (toDate < fromDate) {
+                errorMessage += "<li>Please supply a valid to date, greater than from date</li>";
+                $("#toDate").closest(".form-group").addClass("has-error");
+            }
+        }
+
+        errorMessage += "</ul>"
+        if (errorMessage != "<ul></ul>") {
+            $("#dvError")[0].innerHTML = errorMessage;
+            $("#dvError").css("display", "block")
+            return false;
+        }
+
+        return true;
+    }
+
+    function clearMessages() {
+        $(".form-group").removeClass("has-error");
+        $("#dvError")[0].innerHTML = "";
+    }
+
+    function validateEmail(email) {
+        var reg = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+        if (reg.test(email)) {
+            return true;
+        }
+        return false;
+    }
+
+    function resetAddressFields() {
+        $("#streetAddress").val('');
+        $("#suburb").val('');
+        $("#state").val('');
+        $("#postcode").val('');
+        $("#verifiedAddress").val("False");
+
+        $("#propertyAddress").closest(".form-group").removeClass("has-error");
+        $("#streetAddress").closest(".form-group").removeClass("has-error");
+        $("#suburb").closest(".form-group").removeClass("has-error");
+        $("#state").closest(".form-group").removeClass("has-error");
+        $("#postcode").closest(".form-group").removeClass("has-error");
+    }
+
+    var autocomplete;
+
+    function initAutocomplete() {
+        var options = {
+            componentRestrictions: { country: 'au' }
+        };
+
+        autocomplete = new google.maps.places.Autocomplete(
+            (document.getElementById('propertyAddress')), options);
+
+        autocomplete.addListener('place_changed', fillInAddress);
+    }
+
+    function fillInAddress() {
+        var streetAddress = "";
+        var streetNumber = "";
+        var streetName = "";
+        var suburb = "";
+        var state = "";
+        var postCode = "";
+        var place = autocomplete.getPlace();
+
+        for (var i = 0; i < place.address_components.length; i++) {
+            var type = place.address_components[i].types[0];
+            if (type == "street_number") {
+                streetNumber = place.address_components[i].short_name;
+            }
+            else if (type == "route") {
+                streetName = place.address_components[i].long_name;
+            }
+            else if (type == "locality") {
+                suburb = place.address_components[i].long_name;
+            }
+            else if (type == "administrative_area_level_1") {
+                state = place.address_components[i].short_name;
+            }
+            else if (type == "postal_code") {
+                postCode = place.address_components[i].short_name;
+            }
+        }
+
+        streetAddress = $.trim(streetNumber + " " + streetName);
+
+        $("#streetAddress").val(streetAddress);
+        $("#suburb").val(suburb);
+        $("#state").val(state);
+        $("#postcode").val(postCode);
+        $("#verifiedAddress").val(true);
+    }
+</script>
